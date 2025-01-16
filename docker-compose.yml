@@ -1,0 +1,24 @@
+# docker-compose.yml
+version: '3.8'
+
+services:
+  plants_db:
+    image: postgres:16
+    container_name: plants_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=plants
+    ports:
+      - "5432:5432"
+    volumes:
+      - plants_data:/var/lib/postgresql/data
+      - ./insert.sql:/docker-entrypoint-initdb.d/insert.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  plants_data:
